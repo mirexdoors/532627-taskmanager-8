@@ -1,5 +1,6 @@
-const getFilterElement = function (caption, amount = 0, isChecked = false) {
-    return `<input
+//ex3
+const getFilterElement = (caption, amount = 0, isChecked = false) =>
+    `<input
           type="radio"
           id="filter__${caption.toLowerCase()}"
           class="filter__input visually-hidden"
@@ -9,10 +10,11 @@ const getFilterElement = function (caption, amount = 0, isChecked = false) {
         <label for="filter__all" class="filter__label">
           ${caption.toUpperCase()} <span class="filter__${caption.toLowerCase()}-count">${amount}</span></label
         >`;
-}
 
-const getTaskCard = function (color, cardText, cardTag = "", taskDate = "no", deadline = false) {
-    return ` <article class="card card--${color} ${cardTag ? "card--" + cardTag : ""}">
+
+//ex4
+const getTaskCard = (color, cardText, cardTag = ``, img = undefined, taskDate = undefined, deadline = false, repeat = undefined) =>
+    `<article class="card card--${color} ${cardTag ? "card--" + cardTag : ""}">
             <form class="card__form" method="get">
               <div class="card__inner">
                 <div class="card__control">
@@ -75,7 +77,7 @@ ${cardText}</textarea
                       </fieldset>
 
                       <button class="card__repeat-toggle" type="button">
-                        repeat:<span class="card__repeat-status">no</span>
+                        repeat:<span class="card__repeat-status">${repeat ? repeat : "no"}</span>
                       </button>
 
                       <fieldset class="card__repeat-days" disabled>
@@ -159,7 +161,8 @@ ${cardText}</textarea
 
                     <div class="card__hashtag">
                       <div class="card__hashtag-list">
-                        <span class="card__hashtag-inner">
+                     
+      <span class="card__hashtag-inner">
                           <input
                             type="hidden"
                             name="hashtag"
@@ -203,6 +206,7 @@ ${cardText}</textarea
                             delete
                           </button>
                         </span>
+                       
                       </div>
 
                       <label>
@@ -217,18 +221,18 @@ ${cardText}</textarea
                   </div>
 
                   <label class="card__img-wrap card__img-wrap--empty">
-                    <input
+           
+                   <input
                       type="file"
                       class="card__img-input visually-hidden"
                       name="img"
                     />
                     <img
-                      src="img/add-photo.svg"
+                      src="${img ? img : "" }"
                       alt="task picture"
                       class="card__img"
                     />
                   </label>
-
                   <div class="card__colors-inner">
                     <h3 class="card__colors-title">Color</h3>
                     <div class="card__colors-wrap">
@@ -304,4 +308,57 @@ ${cardText}</textarea
               </div>
             </form>
           </article>`;
+;
+
+function randomInteger(min, max) {
+    var rand = min - 0.5 + Math.random() * (max - min + 1);
+    rand = Math.round(rand);
+    return rand;
 }
+
+document.addEventListener(`DOMContentLoaded`, function (event) {
+
+    //ex5
+    const mainFilter = document.querySelector(`.main__filter`);
+    const filterValues = [`All`, `Overdue`, `Today`, `Favorites`, `Repeating`, `Tags`, `Archive`];
+    if (mainFilter) {
+        filterValues.forEach(function (filterName) {
+            let filterAmount = randomInteger(0, 10);
+            let isChecked = false;
+            if (filterName === `All`) isChecked = true;
+            mainFilter.insertAdjacentHTML(`beforeend`, getFilterElement(filterName, filterAmount, isChecked));
+        });
+    }
+
+    //ex6
+    const taskBoard = document.querySelector(`.board__tasks`);
+    const task = {
+        color: `pink`,
+        cardText: `card content`,
+        cardTag: `tag`,
+    };
+    if (taskBoard) {
+        let step = 0;
+        while (step < 4) {
+            taskBoard.insertAdjacentHTML(`beforeend`, getTaskCard(task.color, task.cardText, task.cardTag));
+            step++;
+        }
+    }
+
+    //ex7
+    if (mainFilter) {
+        mainFilter.addEventListener(`click`, function (event) {
+            const target = event.target;
+            if (target.name === `filter`) {
+                taskBoard.innerHTML = ``;
+                let step = 0;
+                const taskAmount = randomInteger(1, 10);
+                while (step < taskAmount) {
+                    taskBoard.insertAdjacentHTML(`beforeend`, getTaskCard(task.color, task.cardText, task.cardTag));
+                    step++;
+                }
+            }
+        });
+    }
+
+});
