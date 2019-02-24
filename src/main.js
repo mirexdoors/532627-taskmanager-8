@@ -335,10 +335,7 @@ const onCLickFilter = () => {
     --taskAmount;
   }
 };
-// ex7
-document.querySelectorAll(`input[name="filter"]`).forEach((filter) => {
-  filter.addEventListener(`click`, onCLickFilter);
-});
+
 document.addEventListener(`DOMContentLoaded`, function () {
 
   // ex5
@@ -361,4 +358,9 @@ document.addEventListener(`DOMContentLoaded`, function () {
       --counter;
     }
   }
+
+  // ex7
+  document.querySelectorAll(`input[name="filter"]`).forEach((filter) => {
+    filter.addEventListener(`click`, onCLickFilter);
+  });
 });
