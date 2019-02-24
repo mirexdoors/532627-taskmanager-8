@@ -5,7 +5,8 @@
   "description": "Личный проект «Менеджер задач» от HTML Academy",
   "scripts": {
     "eslint": "eslint src/**/*.js",
-    "test": "npm run eslint"
+    "test": "npm run eslint",
+    "fix": "npm run eslint --fix"
   },
   "devDependencies": {
     "eslint": "5.13.0",

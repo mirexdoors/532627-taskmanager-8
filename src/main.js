@@ -1,20 +1,31 @@
-//ex3
+"use strict";
+const TOTAL_CARDS = 4;
+const mainFilter = document.querySelector(`.main__filter`);
+const filterValues = [`All`, `Overdue`, `Today`, `Favorites`, `Repeating`, `Tags`, `Archive`];
+const taskBoard = document.querySelector(`.board__tasks`);
+const task = {
+  color: `pink`,
+  cardText: `card content`,
+  cardTag: `tag`,
+};
+
+// ex3
 const getFilterElement = (caption, amount = 0, isChecked = false) =>
-    `<input
+  `<input
           type="radio"
           id="filter__${caption.toLowerCase()}"
           class="filter__input visually-hidden"
           name="filter"
-          ${isChecked ? " checked" : ""}
+          ${isChecked ? ` checked` : ``}
         />
         <label for="filter__all" class="filter__label">
           ${caption.toUpperCase()} <span class="filter__${caption.toLowerCase()}-count">${amount}</span></label
         >`;
 
 
-//ex4
-const getTaskCard = (color, cardText, cardTag = ``, img = undefined, taskDate = undefined, deadline = false, repeat = undefined) =>
-    `<article class="card card--${color} ${cardTag ? "card--" + cardTag : ""}">
+// ex4
+const getTaskCard = (color, cardText, cardTag = ``, img, taskDate, deadline = false, repeat) =>
+  `<article class="card card--${color} ${cardTag ? `card--` + cardTag : ``}">
             <form class="card__form" method="get">
               <div class="card__inner">
                 <div class="card__control">
@@ -54,10 +65,10 @@ ${cardText}</textarea
                   <div class="card__details">
                     <div class="card__dates">
                       <button class="card__date-deadline-toggle" type="button">
-                        date: <span class="card__date-status">${taskDate ? taskDate : "no"}</span>
+                        date: <span class="card__date-status">${taskDate ? taskDate : `no`}</span>
                       </button>
 
-                      <fieldset class="card__date-deadline" ${deadline ? "" : "disabled"}>
+                      <fieldset class="card__date-deadline" ${deadline ? `` : `disabled`}>
                         <label class="card__input-deadline-wrap">
                           <input
                             class="card__date"
@@ -77,7 +88,7 @@ ${cardText}</textarea
                       </fieldset>
 
                       <button class="card__repeat-toggle" type="button">
-                        repeat:<span class="card__repeat-status">${repeat ? repeat : "no"}</span>
+                        repeat:<span class="card__repeat-status">${repeat ? repeat : `no`}</span>
                       </button>
 
                       <fieldset class="card__repeat-days" disabled>
@@ -228,7 +239,7 @@ ${cardText}</textarea
                       name="img"
                     />
                     <img
-                      src="${img ? img : "" }"
+                      src="${img ? img : `` }"
                       alt="task picture"
                       class="card__img"
                     />
@@ -308,57 +319,46 @@ ${cardText}</textarea
               </div>
             </form>
           </article>`;
-;
 
-function randomInteger(min, max) {
-    var rand = min - 0.5 + Math.random() * (max - min + 1);
-    rand = Math.round(rand);
-    return rand;
-}
 
-document.addEventListener(`DOMContentLoaded`, function (event) {
+const randomInteger = (min, max) => {
+  let rand = min - 0.5 + Math.random() * (max - min + 1);
+  rand = Math.round(rand);
+  return rand;
+};
 
-    //ex5
-    const mainFilter = document.querySelector(`.main__filter`);
-    const filterValues = [`All`, `Overdue`, `Today`, `Favorites`, `Repeating`, `Tags`, `Archive`];
-    if (mainFilter) {
-        filterValues.forEach(function (filterName) {
-            let filterAmount = randomInteger(0, 10);
-            let isChecked = false;
-            if (filterName === `All`) isChecked = true;
-            mainFilter.insertAdjacentHTML(`beforeend`, getFilterElement(filterName, filterAmount, isChecked));
-        });
+const onCLickFilter = () => {
+  taskBoard.innerHTML = ``;
+  let taskAmount = randomInteger(1, 10);
+  while (taskAmount) {
+    taskBoard.insertAdjacentHTML(`beforeend`, getTaskCard(task.color, task.cardText, task.cardTag));
+    --taskAmount;
+  }
+};
+// ex7
+document.querySelectorAll(`input[name="filter"]`).forEach((filter) => {
+  filter.addEventListener(`click`, onCLickFilter);
+});
+document.addEventListener(`DOMContentLoaded`, function () {
+
+  // ex5
+  if (mainFilter) {
+    filterValues.forEach(function (filterName) {
+      const filterAmount = randomInteger(0, 10);
+      let isChecked = false;
+      if (filterName === `All`) {
+        isChecked = true;
+      }
+      mainFilter.insertAdjacentHTML(`beforeend`, getFilterElement(filterName, filterAmount, isChecked));
+    });
+  }
+
+  // ex6
+  if (taskBoard) {
+    let counter = TOTAL_CARDS;
+    while (counter) {
+      taskBoard.insertAdjacentHTML(`beforeend`, getTaskCard(task.color, task.cardText, task.cardTag));
+      --counter;
     }
-
-    //ex6
-    const taskBoard = document.querySelector(`.board__tasks`);
-    const task = {
-        color: `pink`,
-        cardText: `card content`,
-        cardTag: `tag`,
-    };
-    if (taskBoard) {
-        let step = 0;
-        while (step < 4) {
-            taskBoard.insertAdjacentHTML(`beforeend`, getTaskCard(task.color, task.cardText, task.cardTag));
-            step++;
-        }
-    }
-
-    //ex7
-    if (mainFilter) {
-        mainFilter.addEventListener(`click`, function (event) {
-            const target = event.target;
-            if (target.name === `filter`) {
-                taskBoard.innerHTML = ``;
-                let step = 0;
-                const taskAmount = randomInteger(1, 10);
-                while (step < taskAmount) {
-                    taskBoard.insertAdjacentHTML(`beforeend`, getTaskCard(task.color, task.cardText, task.cardTag));
-                    step++;
-                }
-            }
-        });
-    }
-
+  }
 });
