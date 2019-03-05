@@ -8,4 +8,6 @@ export default (caption, amount = 0, isChecked = false) =>
         />
         <label for="filter__all" class="filter__label">
           ${caption.toUpperCase()} <span class="filter__${caption.toLowerCase()}-count">${amount}</span></label
+
           >`;
+

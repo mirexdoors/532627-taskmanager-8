@@ -30,7 +30,9 @@ export default (task) => {
                       placeholder="Start typing your text here..."
                       name="text"
                     >
+
 ${task.title}</textarea
+
                     >
                   </label>
                 </div>
@@ -39,6 +41,7 @@ ${task.title}</textarea
                   <div class="card__details">
                     <div class="card__dates">
                       <button class="card__date-deadline-toggle" type="button">
+
                         date: <span class="card__date-status">${task.dueDate ? task.dueDate : `no`}</span>
                       </button>
 
@@ -62,6 +65,7 @@ ${task.title}</textarea
                       </fieldset>
 
                       <button class="card__repeat-toggle" type="button">
+
                         repeat:<span class="card__repeat-status">no</span>
                       </button>
 
@@ -96,10 +100,12 @@ ${task.title}</textarea
                           />
                           <button type="button" class="card__hashtag-name">
                             #${tag}
+
                           </button>
                           <button type="button" class="card__hashtag-delete">
                             delete
                           </button>
+
                         </span>`).join(``);
 
   taskTemplate += hashtagsTemplate;
@@ -146,4 +152,3 @@ ${task.title}</textarea
     </article>`;
   return taskTemplate;
 };
-
