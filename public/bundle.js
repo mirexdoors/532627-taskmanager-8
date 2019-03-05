@@ -162,8 +162,8 @@ const randomInteger = (min, max) => {
   return rand;
 };
 
-const renderTasks = (tasksArray) => {
-  tasksArray.forEach(taskBoard.insertAdjacentHTML(`beforeend`, Object(_src_make_task_js__WEBPACK_IMPORTED_MODULE_2__["default"])()));
+const renderTask = (task) => {
+  taskBoard.insertAdjacentHTML(`beforeend`, Object(_src_make_task_js__WEBPACK_IMPORTED_MODULE_2__["default"])(task));
 };
 
 const onCLickFilter = () => {
@@ -189,14 +189,18 @@ document.addEventListener(`DOMContentLoaded`, function () {
     });
   }
 
+  // собираем таски в массив
   let counter = TOTAL_CARDS;
   while (counter) {
     tasks.push(Object(_src_get_task_js__WEBPACK_IMPORTED_MODULE_0__["default"])());
+    --counter;
   }
 
+  // рендерим таски
   if (tasks.length > 0 && taskBoard) {
-    console.log(tasks);
-   // renderTasks(tasks);
+    tasks.forEach(function (task) {
+      renderTask(task);
+    });
   }
 
 

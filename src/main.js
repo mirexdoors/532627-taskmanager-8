@@ -15,8 +15,8 @@ const randomInteger = (min, max) => {
   return rand;
 };
 
-const renderTasks = (taskArray) => {
-  taskArray.forEach(taskBoard.insertAdjacentHTML(`beforeend`, getTaskCard(taskArray)));
+const renderTask = (task) => {
+  taskBoard.insertAdjacentHTML(`beforeend`, getTaskCard(task));
 };
 
 const onCLickFilter = () => {
@@ -42,14 +42,18 @@ document.addEventListener(`DOMContentLoaded`, function () {
     });
   }
 
+  // собираем таски в массив
   let counter = TOTAL_CARDS;
   while (counter) {
     tasks.push(getTask());
+    --counter;
   }
 
+  // рендерим таски
   if (tasks.length > 0 && taskBoard) {
-    console.log(tasks);
-    // renderTasks(tasks);
+    tasks.forEach(function (task) {
+      renderTask(task);
+    });
   }
 
 
