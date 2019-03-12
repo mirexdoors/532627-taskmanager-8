@@ -1,7 +1,8 @@
 import getTask from '../src/get-task.js';
 import getFilterElement from '../src/make-filter.js';
 import getTaskCard from '../src/make-task.js';
-
+import {Task} from '../src/task.js';
+import {TaskEdit} from '../src/task-edit.js';
 
 const TOTAL_CARDS = 4;
 const mainFilter = document.querySelector(`.main__filter`);
@@ -9,15 +10,16 @@ const filterValues = [`All`, `Overdue`, `Today`, `Favorites`, `Repeating`, `Tags
 const taskBoard = document.querySelector(`.board__tasks`);
 const tasks = []; // массив для хранения всех тасок
 
+
 const randomInteger = (min, max) => {
   let rand = min - 0.5 + Math.random() * (max - min + 1);
   rand = Math.round(rand);
   return rand;
 };
 
-const renderTask = (task) => {
-  taskBoard.insertAdjacentHTML(`beforeend`, getTaskCard(task));
-};
+// const renderTask = (task) => {
+//   taskBoard.insertAdjacentHTML(`beforeend`, getTaskCard(task));
+// };
 
 const onCLickFilter = () => {
   taskBoard.innerHTML = ``;
@@ -30,6 +32,9 @@ const onCLickFilter = () => {
 
 document.addEventListener(`DOMContentLoaded`, function () {
 
+  const taskComponent = new Task(getTask());
+  taskComponent.render(taskBoard);
+  const taskEditComponent = new TaskEdit(getTask());
   // ex5
   if (mainFilter) {
     filterValues.forEach(function (filterName) {
@@ -50,11 +55,11 @@ document.addEventListener(`DOMContentLoaded`, function () {
   }
 
   // рендерим таски
-  if (tasks.length > 0 && taskBoard) {
-    tasks.forEach(function (task) {
-      renderTask(task);
-    });
-  }
+  // if (tasks.length > 0 && taskBoard) {
+  //   tasks.forEach(function (task) {
+  //     renderTask(task);
+  //   });
+  // }
 
 
   // ex7

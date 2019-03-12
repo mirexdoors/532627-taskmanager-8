@@ -1,6 +1,6 @@
-import {createElement} from '../src/create-element.js';
+import {createElement} from "./create-element";
 
-export class Task {
+export class TaskEdit {
   constructor(data) {
     this._title = data.title;
     this._dueDate = data.dueDate;
@@ -8,29 +8,23 @@ export class Task {
     this._picture = data.picture;
     this._color = data.color;
     this._repeatingDays = data.repeatingDays;
-    this._state = {};
-    this._onEdit = null;
+    this._element = null;
+    this._onSubmit = null;
   }
 
-
-  _isRepeated() {
-    return Object.values(this._repeatingDays).some((it) => it === true);
-  }
-
-  _onEditBtnClick() {
-    if (typeof this._onEdit === `function`) {
-      this._onEdit();
+  _onSubmitBtnClick(e) {
+    e.preventDefault();
+    if (typeof this._onSubmit === `function`) {
+      this._onSubmit();
     }
   }
 
+  set onSubmit(fn) {
+    this._onSubmit = fn;
+  }
   get element() {
     return this._element;
   }
-
-  set onEdit(fn) {
-    this._onEdit = fn;
-  }
-
   get template() {
     let taskTemplate = `<article class="card card--${this._color}  ${this._isRepeated() ? `card--repeat` : ``}">
             <form class="card__form" method="get">
@@ -186,22 +180,6 @@ ${this._title}</textarea
     return taskTemplate;
   }
 
-  bind() {
-    this._element.querySelector(`.card__btn--edit`)
-      .addEventListener(`click`, this._onEditBtnClick.bind(this));
-  }
-
-  unbind() {
-
-  }
-
-  update() {
-    if (this._state.isEdit) {
-      return this._element.classList.add(`card--edit`);
-    }
-    return this._element.classList.remove(`card--edit`);
-  }
-
   render(container) {
     if (this._element) {
       container.removeChild(this._element);
@@ -211,6 +189,15 @@ ${this._title}</textarea
     container.appendChild(this._element);
     this.bind();
     this.update();
+  }
+
+  bind() {
+    this._element.querySelector(`.card__form`)
+      .addEventListener(`submit`, this._onSubmitBtnClick.bind(this));
+  }
+
+  unbind() {
+
   }
 
   unrender() {
