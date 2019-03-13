@@ -1,4 +1,4 @@
-import {createElement} from "./create-element";
+import {createElement} from "../src/utils.js";
 
 export class TaskEdit {
   constructor(data) {
@@ -19,14 +19,20 @@ export class TaskEdit {
     }
   }
 
+  _isRepeated() {
+    return Object.values(this._repeatingDays).some((it) => it === true);
+  }
+
   set onSubmit(fn) {
     this._onSubmit = fn;
   }
+
   get element() {
     return this._element;
   }
+
   get template() {
-    let taskTemplate = `<article class="card card--${this._color}  ${this._isRepeated() ? `card--repeat` : ``}">
+    let taskTemplate = `<article class="card card--edit card--${this._color}  ${this._isRepeated() ? `card--repeat` : ``}">
             <form class="card__form" method="get">
               <div class="card__inner">
                 <div class="card__control">
@@ -115,10 +121,9 @@ ${this._title}</textarea
     taskTemplate += `</div>
                       </fieldset>
                     </div>
-                    <div class="card__hashtag">`;
-
-    taskTemplate += `<div class="card__hashtag-list">`;
-    const hashtagsTemplate = [...this._tags].map((tag) => `<span class="card__hashtag-inner">
+                    <div class="card__hashtag">
+                        <div class="card__hashtag-list">
+${[...this._tags].map((tag) => `<span class="card__hashtag-inner">
                           <input
                             type="hidden"
                             name="hashtag"
@@ -133,14 +138,12 @@ ${this._title}</textarea
                             delete
                           </button>
 
-                        </span>`).join(``);
-
-    taskTemplate += hashtagsTemplate;
-
-    taskTemplate += `</div><label>
-  <input type = "text" class="card__hashtag-input"  name ="hashtag-input"  placeholder = "Type new hashtag here" />
-    </label>
-    </div>
+                        </span>`).join(``)}
+            </div>
+          <label>
+              <input type = "text" class="card__hashtag-input"  name ="hashtag-input"  placeholder = "Type new hashtag here" />
+          </label>
+        </div>
     </div>
 
     <label class="card__img-wrap card__img-wrap--empty">
@@ -148,6 +151,8 @@ ${this._title}</textarea
     <input  type = "file" class="card__img-input visually-hidden" name = "img" />
     <img src = "${this._picture ? this._picture : `` }" alt = "task picture" class="card__img" />
     </label>
+    
+    
     <div class = "card__colors-inner" >
     <h3 class= "card__colors-title" > Color </h3>
     <div class= "card__colors-wrap" >
@@ -181,14 +186,9 @@ ${this._title}</textarea
   }
 
   render(container) {
-    if (this._element) {
-      container.removeChild(this._element);
-      this._element = null;
-    }
     this._element = createElement(this.template);
     container.appendChild(this._element);
     this.bind();
-    this.update();
   }
 
   bind() {
@@ -197,7 +197,7 @@ ${this._title}</textarea
   }
 
   unbind() {
-
+    this._element.removeEventListener(`submit`, this._onSubmitBtnClick());
   }
 
   unrender() {
