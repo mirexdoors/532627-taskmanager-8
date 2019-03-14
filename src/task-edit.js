@@ -1,7 +1,8 @@
-import {createElement} from "../src/utils.js";
+import {Component} from "./component";
 
-export class TaskEdit {
+export class TaskEdit extends Component {
   constructor(data) {
+    super();
     this._title = data.title;
     this._dueDate = data.dueDate;
     this._tags = data.tags;
@@ -10,6 +11,7 @@ export class TaskEdit {
     this._repeatingDays = data.repeatingDays;
     this._element = null;
     this._onSubmit = null;
+    this._onSubmitBtnClick = this._onSubmitBtnClick.bind(this);
   }
 
   _onSubmitBtnClick(e) {
@@ -25,9 +27,6 @@ export class TaskEdit {
     this._onSubmit = fn;
   }
 
-  get element() {
-    return this._element;
-  }
 
   get template() {
     let taskTemplate = `<article class="card card--edit card--${this._color}  ${this._isRepeated() ? `card--repeat` : ``}">
@@ -183,23 +182,13 @@ ${[...this._tags].map((tag) => `<span class="card__hashtag-inner">
     return taskTemplate;
   }
 
-  render() {
-    this._element = createElement(this.template);
-    this.bind();
-    return this._element;
-  }
-
   bind() {
     this._element.querySelector(`.card__form`)
-    .addEventListener(`submit`, this._onSubmitBtnClick.bind(this));
+    .addEventListener(`submit`, this._onSubmitBtnClick);
   }
 
   unbind() {
-    this._element.removeEventListener(`submit`, this._onSubmitBtnClick.bind(this));
+    this._element.removeEventListener(`submit`, this._onSubmitBtnClick);
   }
 
-  unrender() {
-    this.unbind();
-    this._element = null;
-  }
 }
