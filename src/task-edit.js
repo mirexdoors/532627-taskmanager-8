@@ -1,5 +1,36 @@
-export default (task) => {
-  let taskTemplate = `<article class="card card--${task.color}  card--edit}">
+import {createElement} from "../src/utils.js";
+
+export class TaskEdit {
+  constructor(data) {
+    this._title = data.title;
+    this._dueDate = data.dueDate;
+    this._tags = data.tags;
+    this._picture = data.picture;
+    this._color = data.color;
+    this._repeatingDays = data.repeatingDays;
+    this._element = null;
+    this._onSubmit = null;
+  }
+
+  _onSubmitBtnClick(e) {
+    e.preventDefault();
+    return typeof this._onSubmit === `function` && this._onSubmit();
+  }
+
+  _isRepeated() {
+    return Object.values(this._repeatingDays).some((it) => it === true);
+  }
+
+  set onSubmit(fn) {
+    this._onSubmit = fn;
+  }
+
+  get element() {
+    return this._element;
+  }
+
+  get template() {
+    let taskTemplate = `<article class="card card--edit card--${this._color}  ${this._isRepeated() ? `card--repeat` : ``}">
             <form class="card__form" method="get">
               <div class="card__inner">
                 <div class="card__control">
@@ -31,7 +62,7 @@ export default (task) => {
                       name="text"
                     >
 
-${task.title}</textarea
+${this._title}</textarea
 
                     >
                   </label>
@@ -42,7 +73,7 @@ ${task.title}</textarea
                     <div class="card__dates">
                       <button class="card__date-deadline-toggle" type="button">
 
-                        date: <span class="card__date-status">${task.dueDate ? task.dueDate : `no`}</span>
+                        date: <span class="card__date-status">${this._dueDate ? this._dueDate : `no`}</span>
                       </button>
 
                       <fieldset class="card__date-deadline" disabled >
@@ -72,26 +103,25 @@ ${task.title}</textarea
                       <fieldset class="card__repeat-days" disabled>
                         <div class="card__repeat-days-inner">`;
 
-  for (const weekDay in task.repeatingDays) {
-    if ({}.hasOwnProperty.call(task.repeatingDays, weekDay)) {
-      taskTemplate += `<input
+    for (const weekDay in this._repeatingDays) {
+      if ({}.hasOwnProperty.call(this._repeatingDays, weekDay)) {
+        taskTemplate += `<input
                             class="visually-hidden card__repeat-day-input"
                             type="checkbox"
                             id="repeat-${weekDay}-2"
                             name="repeat"
                             value="${weekDay}"
-                            ${task.repeatingDays[weekDay] ? `checked` : ``}
+                            ${this._repeatingDays[weekDay] ? `checked` : ``}
                       />
                       <label class="card__repeat-day" for="repeat-${weekDay}-2">${weekDay}</label >`;
+      }
     }
-  }
-  taskTemplate += `</div>
+    taskTemplate += `</div>
                       </fieldset>
                     </div>
-                    <div class="card__hashtag">`;
-
-  taskTemplate += `<div class="card__hashtag-list">`;
-  const hashtagsTemplate = [...task.tags].map((tag) => `<span class="card__hashtag-inner">
+                    <div class="card__hashtag">
+                        <div class="card__hashtag-list">
+${[...this._tags].map((tag) => `<span class="card__hashtag-inner">
                           <input
                             type="hidden"
                             name="hashtag"
@@ -106,21 +136,21 @@ ${task.title}</textarea
                             delete
                           </button>
 
-                        </span>`).join(``);
-
-  taskTemplate += hashtagsTemplate;
-
-  taskTemplate += `</div><label>
-  <input type = "text" class="card__hashtag-input"  name ="hashtag-input"  placeholder = "Type new hashtag here" />
-    </label>
-    </div>
+                        </span>`).join(``)}
+            </div>
+          <label>
+              <input type = "text" class="card__hashtag-input"  name ="hashtag-input"  placeholder = "Type new hashtag here" />
+          </label>
+        </div>
     </div>
 
     <label class="card__img-wrap card__img-wrap--empty">
 
     <input  type = "file" class="card__img-input visually-hidden" name = "img" />
-    <img src = "${task.picture ? task.picture : `` }" alt = "task picture" class="card__img" />
+    <img src = "${this._picture ? this._picture : `` }" alt = "task picture" class="card__img" />
     </label>
+    
+    
     <div class = "card__colors-inner" >
     <h3 class= "card__colors-title" > Color </h3>
     <div class= "card__colors-wrap" >
@@ -150,5 +180,26 @@ ${task.title}</textarea
     </div>
     </form>
     </article>`;
-  return taskTemplate;
-};
+    return taskTemplate;
+  }
+
+  render() {
+    this._element = createElement(this.template);
+    this.bind();
+    return this._element;
+  }
+
+  bind() {
+    this._element.querySelector(`.card__form`)
+    .addEventListener(`submit`, this._onSubmitBtnClick.bind(this));
+  }
+
+  unbind() {
+    this._element.removeEventListener(`submit`, this._onSubmitBtnClick.bind(this));
+  }
+
+  unrender() {
+    this.unbind();
+    this._element = null;
+  }
+}
