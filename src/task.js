@@ -129,13 +129,13 @@ export class Task {
   }
 
   unbind() {
-    this._element.removeEventListener(`click`, this._onEditBtnClick);
+    this._element.removeEventListener(`click`, this._onEditBtnClick.bind(this));
   }
 
-  render(container) {
+  render() {
     this._element = createElement(this.template);
-    container.appendChild(this._element);
     this.bind();
+    return this._element;
   }
 
   unrender() {

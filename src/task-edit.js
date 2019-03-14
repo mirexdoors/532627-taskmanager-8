@@ -14,9 +14,7 @@ export class TaskEdit {
 
   _onSubmitBtnClick(e) {
     e.preventDefault();
-    if (typeof this._onSubmit === `function`) {
-      this._onSubmit();
-    }
+    return typeof this._onSubmit === `function` && this._onSubmit();
   }
 
   _isRepeated() {
@@ -185,19 +183,19 @@ ${[...this._tags].map((tag) => `<span class="card__hashtag-inner">
     return taskTemplate;
   }
 
-  render(container) {
+  render() {
     this._element = createElement(this.template);
-    container.appendChild(this._element);
     this.bind();
+    return this._element;
   }
 
   bind() {
     this._element.querySelector(`.card__form`)
-      .addEventListener(`submit`, this._onSubmitBtnClick.bind(this));
+    .addEventListener(`submit`, this._onSubmitBtnClick.bind(this));
   }
 
   unbind() {
-    this._element.removeEventListener(`submit`, this._onSubmitBtnClick());
+    this._element.removeEventListener(`submit`, this._onSubmitBtnClick.bind(this));
   }
 
   unrender() {

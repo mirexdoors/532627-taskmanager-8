@@ -19,7 +19,7 @@ const renderTasks = (amount) => {
   while (amount) {
     const task = new Task(getTask());
     const taskEdit = new TaskEdit(getTask());
-    task.render(taskBoard);
+    taskBoard.appendChild(task.render());
     task.onEdit = () => {
       taskEdit.render(taskBoard);
       taskBoard.replaceChild(taskEdit.element, task.element);
