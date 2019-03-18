@@ -11,12 +11,30 @@ export class TaskEdit extends Component {
     this._repeatingDays = data.repeatingDays;
     this._element = null;
     this._onSubmit = null;
+    this._state.isDate = false;
+    this._state.isRepeated = false;
+    this._onChangeDate = this._onChangeDate.bind(this);
+    this._onChangeRepeated = this._onChangeRepeated.bind(this);
     this._onSubmitBtnClick = this._onSubmitBtnClick.bind(this);
   }
 
   _onSubmitBtnClick(e) {
     e.preventDefault();
     return typeof this._onSubmit === `function` && this._onSubmit();
+  }
+
+  _onChangeDate() {
+    this._state.isDate = !this._state.isDate;
+    this.unbind();
+    this._partialUpdate();
+    this.bind();
+  }
+
+  _onChangeRepeated() {
+    this._state.isRepeated = !this._state.isRepeated;
+    this.unbind();
+    this._partialUpdate();
+    this.bind();
   }
 
   _isRepeated() {
@@ -184,11 +202,18 @@ ${[...this._tags].map((tag) => `<span class="card__hashtag-inner">
 
   bind() {
     this._element.querySelector(`.card__form`)
-    .addEventListener(`submit`, this._onSubmitBtnClick);
+      .addEventListener(`submit`, this._onSubmitBtnClick);
   }
 
   unbind() {
     this._element.removeEventListener(`submit`, this._onSubmitBtnClick);
   }
 
+  update(data) {
+    this._title = data.title;
+    this._tags = data.tags;
+    this._color = data.color;
+    this._repeatingDays = data.repeatingDays;
+    this._dueDate = data.dueDate;
+  }
 }

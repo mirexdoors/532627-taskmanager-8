@@ -1,5 +1,5 @@
-import {Component} from "./component";
-
+import {Component} from './component';
+import {COLOR} from '../src/get-task';
 export class Task extends Component {
   constructor(data) {
     super();
@@ -30,7 +30,7 @@ export class Task extends Component {
   }
 
   get template() {
-    let taskTemplate = `<article class="card card--${this._color}  ${this._isRepeated() ? `card--repeat` : ``}">
+    let taskTemplate = `<article class="card ${COLOR[this._color]}  ${this._isRepeated() ? `card--repeat` : ``}">
             <form class="card__form" method="get">
               <div class="card__inner">
                 <div class="card__control">
@@ -128,5 +128,11 @@ export class Task extends Component {
 
   unbind() {
     this._element.removeEventListener(`click`, this._onEditBtnClick);
+  }
+  update(data) {
+    this._title = data.title;
+    this._tags = data.tags;
+    this._color = data.color;
+    this._repeatingDays = data.repeatingDays;
   }
 }
