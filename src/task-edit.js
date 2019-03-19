@@ -208,18 +208,18 @@ ${[...this._tags].map((tag) => `<span class="card__hashtag-inner">
     this._element.querySelector(`.card__form`)
       .addEventListener(`submit`, this._onSubmitBtnClick);
     this._element.querySelector(`.card__date-deadline-toggle`)
-      .addEventListener(`click`, this._onChangeDate());
+      .addEventListener(`click`, this._onChangeDate);
     this._element.querySelector(`.card__repeat-toggle`)
-      .addEventListener(`click`, this._onChangeRepeated());
+      .addEventListener(`click`, this._onChangeRepeated);
   }
 
   unbind() {
     this._element.querySelector(`.card__form`)
       .removeEventListener(`submit`, this._onSubmitBtnClick);
     this._element.querySelector(`.card__date-deadline-toggle`)
-      .removeEventListener(`click`, this._onChangeDate());
+      .removeEventListener(`click`, this._onChangeDate);
     this._element.querySelector(`.card__repeat-toggle`)
-    .removeEventListener(`click`, this._onChangeRepeated());
+      .removeEventListener(`click`, this._onChangeRepeated);
   }
 
   update(data) {
