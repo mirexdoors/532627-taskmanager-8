@@ -26,7 +26,8 @@ const renderTasks = (amount) => {
       task.unrender();
     };
 
-    taskEdit.onSubmit = () => {
+    taskEdit.onSubmit = (newObject) => {
+      task.update(newObject);
       task.render(taskBoard);
       taskBoard.replaceChild(task.element, taskEdit.element);
       taskEdit.unrender();
