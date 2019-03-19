@@ -37,6 +37,10 @@ export class TaskEdit extends Component {
     this.bind();
   }
 
+  _partialUpdate() {
+    this._element.innerHTML = this.template;
+  }
+
   _isRepeated() {
     return Object.values(this._repeatingDays).some((it) => it === true);
   }
@@ -203,10 +207,19 @@ ${[...this._tags].map((tag) => `<span class="card__hashtag-inner">
   bind() {
     this._element.querySelector(`.card__form`)
       .addEventListener(`submit`, this._onSubmitBtnClick);
+    this._element.querySelector(`.card__date-deadline-toggle`)
+      .addEventListener(`click`, this._onChangeDate());
+    this._element.querySelector(`.card__repeat-toggle`)
+      .addEventListener(`click`, this._onChangeRepeated());
   }
 
   unbind() {
-    this._element.removeEventListener(`submit`, this._onSubmitBtnClick);
+    this._element.querySelector(`.card__form`)
+      .removeEventListener(`submit`, this._onSubmitBtnClick);
+    this._element.querySelector(`.card__date-deadline-toggle`)
+      .removeEventListener(`click`, this._onChangeDate());
+    this._element.querySelector(`.card__repeat-toggle`)
+    .removeEventListener(`click`, this._onChangeRepeated());
   }
 
   update(data) {
