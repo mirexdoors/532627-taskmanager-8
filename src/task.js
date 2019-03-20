@@ -12,6 +12,10 @@ export class Task extends Component {
     this._color = data.color;
     this._repeatingDays = data.repeatingDays;
     this._onEdit = null;
+    this._state = {
+      isEdit: false,
+      isFavorite: false
+    };
     this._onEditBtnClick = this._onEditBtnClick.bind(this);
   }
 
@@ -44,25 +48,25 @@ export class Task extends Component {
                   </button>
                   <button
                     type="button"
-                    class="card__btn card__btn--favorites card__btn--disabled"
-                  >
-                    favorites
-                  </button>
-                </div>
-
-                <div class="card__color-bar">
-                  <svg class="card__color-bar-wave" width="100%" height="10">
-                    <use xlink:href="#wave"></use>
-                  </svg>
-                </div>
-
-                <div class="card__textarea-wrap">
-                  <label>
-                    <textarea
-                      class="card__text"
-                      placeholder="Start typing your text here..."
-                      name="text"
-                    >${this._title}</textarea>
+                    class="card__btn card__btn--favorites ${this._state.isFavorite ? `` : `card__btn--disabled`}"
+                    >
+                      favorites
+                    </button>
+                  </div>
+  
+                  <div class="card__color-bar">
+                    <svg class="card__color-bar-wave" width="100%" height="10">
+                      <use xlink:href="#wave"></use>
+                    </svg>
+                  </div>
+  
+                  <div class="card__textarea-wrap">
+                    <label>
+                      <textarea
+                        class="card__text"
+                        placeholder="Start typing your text here..."
+                        name="text"
+                      >${this._title}</textarea>
                   </label>
                 </div>
 
@@ -71,7 +75,7 @@ export class Task extends Component {
                   <div class="card__details">
                     <div class="card__dates">
                     <button class="card__date-deadline-toggle" type="button">
-                      date: <span class="card__date-status">${this._isRepeated() ? `yes` : `no`}</span>
+                      date: <span class="card__date-status">no</span>
                         </button>
                         <fieldset class="card__date-deadline" ${!this._isRepeated() ? `disabled` : ``} >
                             <label class="card__input-deadline-wrap">
@@ -140,6 +144,5 @@ ${[...this._tags].map((tag) => `<span class="card__hashtag-inner">
     this._tags = data.tags;
     this._color = data.color;
     this._repeatingDays = data.repeatingDays;
-    this._dueDate = data.dueDate;
   }
 }

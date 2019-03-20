@@ -1,4 +1,7 @@
+import {randomInteger} from "./utils";
+
 export default () => ({
+  id: randomInteger(0, 999),
   title: [
     `Изучить теорию`,
     `Сделать домашку`,
@@ -28,7 +31,5 @@ export default () => ({
     Fr: true,
     Sa: true,
     Su: false,
-  },
-  isFavorite: true,
-  isDone: false,
+  }
 });

@@ -5,6 +5,7 @@ import moment from 'moment';
 export class TaskEdit extends Component {
   constructor(data) {
     super();
+    this._id = data.id;
     this._title = data.title;
     this._dueDate = new Date(data.dueDate);
     this._tags = data.tags;
@@ -13,7 +14,7 @@ export class TaskEdit extends Component {
     this._repeatingDays = data.repeatingDays;
     this._element = null;
     this._onSubmit = null;
-    this._state.isDate = false;
+    this._state.isDate = data.isDate;
     this._state.isRepeated = false;
     this._onChangeDate = this._onChangeDate.bind(this);
     this._onChangeRepeated = this._onChangeRepeated.bind(this);
@@ -179,12 +180,12 @@ ${this._title}</textarea
         taskTemplate += `<input
                             class="visually-hidden card__repeat-day-input"
                             type="checkbox"
-                            id="repeat-${weekDay}-2"
+                            id="repeat-${weekDay}-2_${this._id}"
                             name="repeat"
                             value="${weekDay}"
                             ${this._repeatingDays[weekDay] ? `checked` : ``}
                       />
-                      <label class="card__repeat-day" for="repeat-${weekDay}-2">${weekDay}</label >`;
+                      <label class="card__repeat-day" for="repeat-${weekDay}-2_${this._id}">${weekDay}</label >`;
       }
     }
     taskTemplate += `</div>
@@ -225,18 +226,18 @@ ${[...this._tags].map((tag) => `<span class="card__hashtag-inner">
     <div class = "card__colors-inner" >
     <h3 class= "card__colors-title" > Color </h3>
     <div class= "card__colors-wrap" >
-    <input type = "radio" id = "color-black-2" class= "card__color-input card__color-input--black visually-hidden" name = "color"
+    <input type = "radio" id = "color-black-2_${this._id}" class= "card__color-input card__color-input--black visually-hidden" name = "color"
   value = "black" />
-    <label for= "color-black-2" class= "card__color card__color--black"> black </label>
-    <input type = "radio" id = "color-yellow-2" class= "card__color-input card__color-input--yellow visually-hidden" name = "color"
+    <label for= "color-black-2_${this._id}" class= "card__color card__color--black"> black </label>
+    <input type = "radio" id = "color-yellow-2_${this._id}" class= "card__color-input card__color-input--yellow visually-hidden" name = "color"
   value = "yellow"  />
-    <label for= "color-yellow-2" class="card__color card__color--yellow"> yellow </label>
-    <input type = "radio" id = "color-blue-2" class= "card__color-input card__color-input--blue visually-hidden"  name = "color"  value = "blue" />
-    <label for= "color-blue-2" class= "card__color card__color--blue"> blue </label>
-    <input type = "radio" id = "color-green-2" class= "card__color-input card__color-input--green visually-hidden" name = "color"
+    <label for= "color-yellow-2_${this._id}" class="card__color card__color--yellow"> yellow </label>
+    <input type = "radio" id = "color-blue-2_${this._id}" class= "card__color-input card__color-input--blue visually-hidden"  name = "color"  value = "blue" />
+    <label for= "color-blue-2_${this._id}" class= "card__color card__color--blue"> blue </label>
+    <input type = "radio" id = "color-green-2_${this._id}" class= "card__color-input card__color-input--green visually-hidden" name = "color"
   value = "green" />
-    <label for= "color-green-2" class= "card__color card__color--green"> green </label>
-    <input type = "radio" id = "color-pink-2" class= "card__color-input card__color-input--pink visually-hidden"  name = "color"
+    <label for= "color-green-2_${this._id}" class= "card__color card__color--green"> green </label>
+    <input type = "radio" id = "color-pink-2_${this._id}" class= "card__color-input card__color-input--pink visually-hidden"  name = "color"
   value = "pink"  checked />
   <label for= "color-pink-2" class= "card__color card__color--pink"> pink </label>
     </div>
@@ -253,6 +254,7 @@ ${[...this._tags].map((tag) => `<span class="card__hashtag-inner">
     </article>`.trim();
     return taskTemplate;
   }
+
   cache() {
     this._form = this._element.querySelector(`.card__form`);
     this._deadlineToggle = this._element.querySelector(`.card__date-deadline-toggle`);
@@ -264,24 +266,26 @@ ${[...this._tags].map((tag) => `<span class="card__hashtag-inner">
     this._deadlineToggle = null;
     this._repeatToggle = null;
   }
+
   bind() {
     this._element.querySelector(`.card__form`)
-      .addEventListener(`submit`, this._onSubmitBtnClick);
+    .addEventListener(`submit`, this._onSubmitBtnClick);
     this._element.querySelector(`.card__date-deadline-toggle`)
-      .addEventListener(`click`, this._onChangeDate);
+    .addEventListener(`click`, this._onChangeDate);
     this._element.querySelector(`.card__repeat-toggle`)
-      .addEventListener(`click`, this._onChangeRepeated);
+    .addEventListener(`click`, this._onChangeRepeated);
 
     if (this._state.isDate) {
-      flatpickr(
-          `.card__date`,
+      const cardDate = this._element.querySelector(`.card__date`);
+      const cardTime = this._element.querySelector(`.card__time`);
+      flatpickr(cardDate,
           {
             altInput: true,
             altFormat: `j F`,
             dateFormat: `j F`
           }
       );
-      flatpickr(`.card__time`,
+      flatpickr(cardTime,
           {
             enableTime: true,
             noCalendar: true,
@@ -295,11 +299,11 @@ ${[...this._tags].map((tag) => `<span class="card__hashtag-inner">
 
   unbind() {
     this._element.querySelector(`.card__form`)
-      .removeEventListener(`submit`, this._onSubmitBtnClick);
+    .removeEventListener(`submit`, this._onSubmitBtnClick);
     this._element.querySelector(`.card__date-deadline-toggle`)
-      .removeEventListener(`click`, this._onChangeDate);
+    .removeEventListener(`click`, this._onChangeDate);
     this._element.querySelector(`.card__repeat-toggle`)
-      .removeEventListener(`click`, this._onChangeRepeated);
+    .removeEventListener(`click`, this._onChangeRepeated);
   }
 
   update(data) {
@@ -321,7 +325,7 @@ ${[...this._tags].map((tag) => `<span class="card__hashtag-inner">
         const time = moment(value, `HH:mm A`);
 
         target.dueDate = moment(target.dueDate)
-          .set({hour: time.hour(), minute: time.minute()}).toDate().getTime();
+        .set({hour: time.hour(), minute: time.minute()}).toDate().getTime();
       }
     };
   }
