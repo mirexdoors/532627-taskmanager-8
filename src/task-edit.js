@@ -26,30 +26,22 @@ export class TaskEdit extends Component {
 
     const formData = new FormData(this._element.querySelector(`.card__form`));
     const newData = this._processForm(formData);
-
     if (typeof this._onSubmit === `function`) {
       this._onSubmit(newData);
     }
-
     this.update(newData);
-
-    this._state.isDate = false;
   }
 
   _onChangeDate() {
     this._state.isDate = !this._state.isDate;
     this.unbind();
-    this.uncache();
     this._partialUpdate();
-    this.cache();
     this.bind();
   }
 
   _onChangeRepeated() {
     this._state.isRepeated = !this._state.isRepeated;
     this.unbind();
-    this.uncache();
-    this.cache();
     this._partialUpdate();
     this.bind();
   }
@@ -70,9 +62,7 @@ export class TaskEdit extends Component {
         'su': false,
       }
     };
-
     const taskEditMapper = TaskEdit.createMapper(entry);
-
     for (const pair of formData.entries()) {
       const [property, value] = pair;
 
@@ -255,55 +245,43 @@ ${[...this._tags].map((tag) => `<span class="card__hashtag-inner">
     return taskTemplate;
   }
 
-  cache() {
-    this._form = this._element.querySelector(`.card__form`);
-    this._deadlineToggle = this._element.querySelector(`.card__date-deadline-toggle`);
-    this._repeatToggle = this._element.querySelector(`.card__repeat-toggle`);
-  }
-
-  uncache() {
-    this._form = null;
-    this._deadlineToggle = null;
-    this._repeatToggle = null;
-  }
-
   bind() {
     this._element.querySelector(`.card__form`)
-    .addEventListener(`submit`, this._onSubmitBtnClick);
+      .addEventListener(`submit`, this._onSubmitBtnClick);
     this._element.querySelector(`.card__date-deadline-toggle`)
-    .addEventListener(`click`, this._onChangeDate);
+      .addEventListener(`click`, this._onChangeDate);
     this._element.querySelector(`.card__repeat-toggle`)
-    .addEventListener(`click`, this._onChangeRepeated);
+      .addEventListener(`click`, this._onChangeRepeated);
 
     if (this._state.isDate) {
       const cardDate = this._element.querySelector(`.card__date`);
       const cardTime = this._element.querySelector(`.card__time`);
       flatpickr(cardDate,
-          {
-            altInput: true,
-            altFormat: `j F`,
-            dateFormat: `j F`
-          }
+        {
+          altInput: true,
+          altFormat: `j F`,
+          dateFormat: `j F`
+        }
       );
       flatpickr(cardTime,
-          {
-            enableTime: true,
-            noCalendar: true,
-            altInput: true,
-            altFormat: `h:i K`,
-            dateFormat: `h:i K`
-          }
+        {
+          enableTime: true,
+          noCalendar: true,
+          altInput: true,
+          altFormat: `h:i K`,
+          dateFormat: `h:i K`
+        }
       );
     }
   }
 
   unbind() {
     this._element.querySelector(`.card__form`)
-    .removeEventListener(`submit`, this._onSubmitBtnClick);
+      .removeEventListener(`submit`, this._onSubmitBtnClick);
     this._element.querySelector(`.card__date-deadline-toggle`)
-    .removeEventListener(`click`, this._onChangeDate);
+      .removeEventListener(`click`, this._onChangeDate);
     this._element.querySelector(`.card__repeat-toggle`)
-    .removeEventListener(`click`, this._onChangeRepeated);
+      .removeEventListener(`click`, this._onChangeRepeated);
   }
 
   update(data) {
@@ -325,7 +303,7 @@ ${[...this._tags].map((tag) => `<span class="card__hashtag-inner">
         const time = moment(value, `HH:mm A`);
 
         target.dueDate = moment(target.dueDate)
-        .set({hour: time.hour(), minute: time.minute()}).toDate().getTime();
+          .set({hour: time.hour(), minute: time.minute()}).toDate().getTime();
       }
     };
   }
