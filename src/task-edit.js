@@ -66,6 +66,7 @@ export class TaskEdit extends Component {
       isDate: false
     };
     const taskEditMapper = TaskEdit.createMapper(entry);
+
     for (const pair of formData.entries()) {
       const [property, value] = pair;
 
@@ -259,22 +260,8 @@ ${[...this._tags].map((tag) => `<span class="card__hashtag-inner">
     if (this._state.isDate) {
       const cardDate = this._element.querySelector(`.card__date`);
       const cardTime = this._element.querySelector(`.card__time`);
-      flatpickr(cardDate,
-        {
-          altInput: true,
-          altFormat: `j F`,
-          dateFormat: `j F`
-        }
-      );
-      flatpickr(cardTime,
-        {
-          enableTime: true,
-          noCalendar: true,
-          altInput: true,
-          altFormat: `h:i K`,
-          dateFormat: `h:i K`
-        }
-      );
+      flatpickr(cardDate, {altInput: true, altFormat: `j F`, dateFormat: `j F`});
+      flatpickr(cardTime, {enableTime: true, noCalendar: true, altInput: true, altFormat: `h:i K`, dateFormat: `h:i K`});
     }
   }
 
@@ -294,6 +281,17 @@ ${[...this._tags].map((tag) => `<span class="card__hashtag-inner">
     this._color = data.color;
     this._repeatingDays = data.repeatingDays;
     this._dueDate = data.dueDate;
+  }
+
+  deleteHashtag() {
+    const hashtags = this._element.querySelector(`.card__hashtag-list`);
+    hashtags.addEventListener(`click`, function (e) {
+      const target = e.target;
+      if (target.classList.contains(`card__hashtag-delete`)) {
+        const hashtag = target.parentNode;
+        hashtag.parentNode.removeChild(hashtag);
+      }
+    });
   }
 
   static createMapper(target) {

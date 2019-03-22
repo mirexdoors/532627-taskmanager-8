@@ -24,12 +24,12 @@ export default () => ({
     `green`
   ][Math.floor(Math.random() * 5)],
   repeatingDays: {
-    Mo: true,
-    Tu: false,
-    We: true,
-    Th: false,
-    Fr: true,
-    Sa: true,
-    Su: false,
+    mo: true,
+    tu: false,
+    we: true,
+    th: false,
+    fr: true,
+    sa: true,
+    su: false,
   }
 });

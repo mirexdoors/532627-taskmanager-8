@@ -15,3 +15,9 @@ export const COLORS = {
   green: `card--green`,
   pink: `card--pink`
 };
+export const deleteElement = (elementSelector) => {
+  [].forEach.call(document.querySelectorAll(elementSelector), function (e) {
+    e.parentNode.removeChild(e);
+  });
+};
+
