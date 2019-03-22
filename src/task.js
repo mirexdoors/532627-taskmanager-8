@@ -6,6 +6,7 @@ export class Task extends Component {
   constructor(data) {
     super();
     this._id = data.id;
+    this._isDate = data.isDate;
     this._title = data.title;
     this._dueDate = data.dueDate;
     this._tags = data.tags;
@@ -36,7 +37,6 @@ export class Task extends Component {
 
   get template() {
     const date = moment(this._dueDate);
-    console.log(this)
     let taskTemplate = `<article class="card ${COLORS[this._color]}  ${this._isRepeated() ? `card--repeat` : ``}">
             <form class="card__form" method="get">
               <div class="card__inner">
@@ -78,7 +78,7 @@ export class Task extends Component {
                     <button class="card__date-deadline-toggle" type="button">
                       date: <span class="card__date-status">no</span>
                         </button>
-                        <fieldset class="card__date-deadline" ${!this._state.isDate ? `disabled` : ``} >
+                        <fieldset class="card__date-deadline" ${!this._isDate ? `disabled` : ``} >
                             <label class="card__input-deadline-wrap">
                               <input
                                 class="card__date"
@@ -146,5 +146,6 @@ ${[...this._tags].map((tag) => `<span class="card__hashtag-inner">
     this._color = data.color;
     this._repeatingDays = data.repeatingDays;
     this._dueDate = data.dueDate;
+    this._isDate = data.isDate;
   }
 }

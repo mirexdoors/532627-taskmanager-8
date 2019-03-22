@@ -25,7 +25,9 @@ export class TaskEdit extends Component {
     e.preventDefault();
 
     const formData = new FormData(this._element.querySelector(`.card__form`));
+    formData.append(`isDate`, this._state.isDate);
     const newData = this._processForm(formData);
+
     if (typeof this._onSubmit === `function`) {
       this._onSubmit(newData);
     }
@@ -60,7 +62,8 @@ export class TaskEdit extends Component {
         'fr': false,
         'sa': false,
         'su': false,
-      }
+      },
+      isDate: false
     };
     const taskEditMapper = TaskEdit.createMapper(entry);
     for (const pair of formData.entries()) {
@@ -286,6 +289,7 @@ ${[...this._tags].map((tag) => `<span class="card__hashtag-inner">
 
   update(data) {
     this._title = data.title;
+    this._isDate = data.isDate;
     this._tags = data.tags;
     this._color = data.color;
     this._repeatingDays = data.repeatingDays;
@@ -296,6 +300,7 @@ ${[...this._tags].map((tag) => `<span class="card__hashtag-inner">
     return {
       hashtag: (value) => target.tags.add(value),
       text: (value) => (target.title = value),
+      isDate: (value) => (target.isDate = value),
       color: (value) => (target.color = value),
       repeat: (value) => (target.repeatingDays[value] = true),
       date: (value) => (target.dueDate = moment(value, `DD MMMM`).toDate().getTime()),
