@@ -8,3 +8,16 @@ export const createElement = (template) => {
   newElement.innerHTML = template;
   return newElement.firstChild;
 };
+export const COLORS = {
+  blue: `card--blue`,
+  black: `card--black`,
+  yellow: `card--yellow`,
+  green: `card--green`,
+  pink: `card--pink`
+};
+export const deleteElement = (elementSelector) => {
+  [].forEach.call(document.querySelectorAll(elementSelector), function (e) {
+    e.parentNode.removeChild(e);
+  });
+};
+

@@ -34,5 +34,8 @@ export class Component {
 
   unbind() {
   }
+
+  update() {
+  }
 }
 

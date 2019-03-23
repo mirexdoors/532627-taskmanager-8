@@ -1,6 +1,6 @@
 import getTask from '../src/get-task.js';
 import getFilterElement from '../src/make-filter.js';
-import {randomInteger} from '../src/utils.js';
+import {randomInteger, deleteElement} from '../src/utils.js';
 import {Task} from '../src/task.js';
 import {TaskEdit} from '../src/task-edit.js';
 
@@ -22,14 +22,17 @@ const renderTasks = (amount) => {
     taskBoard.appendChild(task.render());
     task.onEdit = () => {
       taskEdit.render(taskBoard);
+      taskEdit.deleteHashtag();
       taskBoard.replaceChild(taskEdit.element, task.element);
       task.unrender();
     };
 
-    taskEdit.onSubmit = () => {
+    taskEdit.onSubmit = (newObject) => {
+      task.update(newObject);
       task.render(taskBoard);
       taskBoard.replaceChild(task.element, taskEdit.element);
       taskEdit.unrender();
+      deleteElement(`.flatpickr-calendar`);
     };
     --amount;
   }

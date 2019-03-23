@@ -1,19 +1,25 @@
-import {Component} from "./component";
+import {Component} from './component';
+import {COLORS} from "./utils";
+import moment from 'moment';
 
 export class Task extends Component {
   constructor(data) {
     super();
+    this._id = data.id;
+    this._isDate = data.isDate;
     this._title = data.title;
     this._dueDate = data.dueDate;
     this._tags = data.tags;
     this._picture = data.picture;
     this._color = data.color;
     this._repeatingDays = data.repeatingDays;
-    this._state = {};
     this._onEdit = null;
+    this._state = {
+      isEdit: false,
+      isFavorite: false
+    };
     this._onEditBtnClick = this._onEditBtnClick.bind(this);
   }
-
 
   _isRepeated() {
     return Object.values(this._repeatingDays).some((it) => it === true);
@@ -30,7 +36,8 @@ export class Task extends Component {
   }
 
   get template() {
-    let taskTemplate = `<article class="card card--${this._color}  ${this._isRepeated() ? `card--repeat` : ``}">
+    const date = moment(this._dueDate);
+    let taskTemplate = `<article class="card ${COLORS[this._color]}  ${this._isRepeated() ? `card--repeat` : ``}">
             <form class="card__form" method="get">
               <div class="card__inner">
                 <div class="card__control">
@@ -42,25 +49,25 @@ export class Task extends Component {
                   </button>
                   <button
                     type="button"
-                    class="card__btn card__btn--favorites card__btn--disabled"
-                  >
-                    favorites
-                  </button>
-                </div>
-
-                <div class="card__color-bar">
-                  <svg class="card__color-bar-wave" width="100%" height="10">
-                    <use xlink:href="#wave"></use>
-                  </svg>
-                </div>
-
-                <div class="card__textarea-wrap">
-                  <label>
-                    <textarea
-                      class="card__text"
-                      placeholder="Start typing your text here..."
-                      name="text"
-                    >${this._title}</textarea>
+                    class="card__btn card__btn--favorites ${this._state.isFavorite ? `` : `card__btn--disabled`}"
+                    >
+                      favorites
+                    </button>
+                  </div>
+  
+                  <div class="card__color-bar">
+                    <svg class="card__color-bar-wave" width="100%" height="10">
+                      <use xlink:href="#wave"></use>
+                    </svg>
+                  </div>
+  
+                  <div class="card__textarea-wrap">
+                    <label>
+                      <textarea
+                        class="card__text"
+                        placeholder="Start typing your text here..."
+                        name="text"
+                      >${this._title}</textarea>
                   </label>
                 </div>
 
@@ -68,29 +75,32 @@ export class Task extends Component {
                 <div class="card__settings">
                   <div class="card__details">
                     <div class="card__dates">
-                      <fieldset class="card__date-deadline" disabled >
-                        <label class="card__input-deadline-wrap">
-                          <input
-                            class="card__date"
-                            type="text"
-                            placeholder="23 September"
-                            name="date"
-                          />
-                        </label>
-                        <label class="card__input-deadline-wrap">
-                          <input
-                            class="card__time"
-                            type="text"
-                            placeholder="11:15 PM"
-                            name="time"
-                          />
-                        </label>                   
-                      </fieldset>
-                    </div>
-                    
-                    <div class="card__hashtag">
-                      <div class="card__hashtag-list">
-                        ${[...this._tags].map((tag) => `<span class="card__hashtag-inner">
+                    <button class="card__date-deadline-toggle" type="button">
+                      date: <span class="card__date-status">no</span>
+                        </button>
+                        <fieldset class="card__date-deadline" ${!this._isDate ? `disabled` : ``} >
+                            <label class="card__input-deadline-wrap">
+                              <input
+                                class="card__date"
+                                type="text"
+                                name="date_${this._id}"
+                                value="${date.format(`DD MMMM`)}"
+                            />
+                          </label>
+                          <label class="card__input-deadline-wrap">
+                            <input
+                              class="card__time"
+                              type="text"
+                              name="time"
+                              value="${date.format(`HH:mm A`)}"
+                            />
+                          </label>                   
+                        </fieldset>
+                      </div>
+                      
+                      <div class="card__hashtag">
+                        <div class="card__hashtag-list">
+${[...this._tags].map((tag) => `<span class="card__hashtag-inner">
                           <input
                             type="hidden"
                             name="hashtag"
@@ -128,5 +138,14 @@ export class Task extends Component {
 
   unbind() {
     this._element.removeEventListener(`click`, this._onEditBtnClick);
+  }
+
+  update(data) {
+    this._title = data.title;
+    this._tags = data.tags;
+    this._color = data.color;
+    this._repeatingDays = data.repeatingDays;
+    this._dueDate = data.dueDate;
+    this._isDate = data.isDate;
   }
 }
