@@ -20,4 +20,14 @@ export const deleteElement = (elementSelector) => {
     e.parentNode.removeChild(e);
   });
 };
+export const deleteTask = (tasks, taskForDelete) => {
+  for (let task of tasks) {
+    if (task.id === taskForDelete._id) {
+      const i = tasks.indexOf(task);
+      tasks.splice(i, 1);
+      return;
+    }
+  }
+};
+
 

@@ -1,6 +1,6 @@
 import getTask from '../src/get-task.js';
 import getFilterElement from '../src/make-filter.js';
-import {randomInteger, deleteElement} from '../src/utils.js';
+import {randomInteger, deleteElement, deleteTask} from '../src/utils.js';
 import {Task} from '../src/task.js';
 import {TaskEdit} from '../src/task-edit.js';
 
@@ -14,11 +14,20 @@ const onCLickFilter = () => {
   let taskAmount = randomInteger(1, 10);
   renderTasks(taskAmount);
 };
+const createTaskList = (amount) => {
+  const tasks = [];
+  while (amount) {
+    tasks.push(getTask());
+    amount--;
+  }
+  return tasks;
+};
 
 const renderTasks = (amount) => {
-  while (amount) {
-    const task = new Task(getTask());
-    const taskEdit = new TaskEdit(getTask());
+  const tasks = createTaskList(amount);
+  tasks.map((taskData) => {
+    const task = new Task(taskData);
+    const taskEdit = new TaskEdit(taskData);
     taskBoard.appendChild(task.render());
     task.onEdit = () => {
       taskEdit.render(taskBoard);
@@ -34,8 +43,12 @@ const renderTasks = (amount) => {
       taskEdit.unrender();
       deleteElement(`.flatpickr-calendar`);
     };
-    --amount;
-  }
+    taskEdit.onDelete = () => {
+      taskEdit.element.remove();
+      taskEdit.unrender();
+      deleteTask(tasks, task);
+    };
+  });
 };
 
 document.addEventListener(`DOMContentLoaded`, function () {

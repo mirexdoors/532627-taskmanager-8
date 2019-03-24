@@ -16,9 +16,18 @@ export class TaskEdit extends Component {
     this._onSubmit = null;
     this._state.isDate = data.isDate;
     this._state.isRepeated = false;
+    this._onDelete = null;
     this._onChangeDate = this._onChangeDate.bind(this);
     this._onChangeRepeated = this._onChangeRepeated.bind(this);
     this._onSubmitBtnClick = this._onSubmitBtnClick.bind(this);
+    this._onDeleteBtnClick = this._onDeleteBtnClick.bind(this);
+
+  }
+
+  _onDeleteBtnClick() {
+    if (typeof this._onDelete === `function`) {
+      this._onDelete();
+    }
   }
 
   _onSubmitBtnClick(e) {
@@ -90,6 +99,9 @@ export class TaskEdit extends Component {
     this._onSubmit = fn;
   }
 
+  set onDelete(fn) {
+    this._onDelete = fn;
+  }
 
   get template() {
     const date = moment(this._dueDate);
@@ -256,12 +268,20 @@ ${[...this._tags].map((tag) => `<span class="card__hashtag-inner">
       .addEventListener(`click`, this._onChangeDate);
     this._element.querySelector(`.card__repeat-toggle`)
       .addEventListener(`click`, this._onChangeRepeated);
+    this._element.querySelector(`.card__delete`)
+      .addEventListener(`click`, this._onDeleteBtnClick);
 
     if (this._state.isDate) {
       const cardDate = this._element.querySelector(`.card__date`);
       const cardTime = this._element.querySelector(`.card__time`);
       flatpickr(cardDate, {altInput: true, altFormat: `j F`, dateFormat: `j F`});
-      flatpickr(cardTime, {enableTime: true, noCalendar: true, altInput: true, altFormat: `h:i K`, dateFormat: `h:i K`});
+      flatpickr(cardTime, {
+        enableTime: true,
+        noCalendar: true,
+        altInput: true,
+        altFormat: `h:i K`,
+        dateFormat: `h:i K`
+      });
     }
   }
 
@@ -272,6 +292,8 @@ ${[...this._tags].map((tag) => `<span class="card__hashtag-inner">
       .removeEventListener(`click`, this._onChangeDate);
     this._element.querySelector(`.card__repeat-toggle`)
       .removeEventListener(`click`, this._onChangeRepeated);
+    this._element.querySelector(`.card__delete`)
+        .removeEventListener(`click`, this._onDeleteBtnClick);
   }
 
   update(data) {
